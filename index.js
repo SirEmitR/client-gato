@@ -9,13 +9,20 @@ function callRpcPeer(host, port, method, params, callback) {
     client.on('data', (data) => {
         const response = JSON.parse(data);
         callback(response.result);
-        client.destroy();
     });
 }
 
-const peerHost = '127.0.0.1';
-const peerPort = 8000;
+const peerHost = '191.168.1.2';
+const peerPort = 41200;
 
 callRpcPeer(peerHost, peerPort, 'makeMove', [4], (result) => {
     console.log('Nuevo estado del juego:', result);
 });
+
+
+process.stdin.on('data', (data) => {
+    const move = parseInt(data.toString().trim());
+    callRpcPeer(peerHost, peerPort, 'makeMove', [move], (result) => {
+        console.log('Nuevo estado del juego:', result);
+    });
+})
